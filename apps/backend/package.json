@@ -1,0 +1,8 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "fastapi dev /app/main.py",
+    "poststop": "deactivate"
+  }
+}
