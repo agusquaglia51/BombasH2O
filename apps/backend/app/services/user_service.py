@@ -1,10 +1,10 @@
+from datetime import datetime
 from sqlalchemy.orm import Session
-from apps.backend.app.db import models
-from apps.backend.app.dto.users import UserDto
 
+from app.db import models
+from ..schemas.user import UserRegister
 
-def create_user(db: Session, user: UserDto):
-    print(f"Creating employee: {user.first_name}")
+def create_user(db: Session, user: UserRegister):
     exist = db.query(models.User).filter(models.User.email == user.email).first()
     if exist:
         raise ValueError("Employee already exists")
@@ -13,7 +13,9 @@ def create_user(db: Session, user: UserDto):
         last_name=user.last_name,
         email=user.email,
         password=user.password,
-        cellphone=user.cellphone
+        cellphone=user.cellphone,
+        created_at =datetime.utcnow(),
+        updated_at =datetime.utcnow(),
     )
     db.add(new_user)
     db.commit()

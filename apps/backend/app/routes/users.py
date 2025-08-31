@@ -1,23 +1,20 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from apps.backend.app.db import database
-from apps.backend.app.dto.users import UserDto
-from apps.backend.app.services import user_service
+from app.db import database
+from ..schemas.user import UserRegister
+from app.services import user_service
 
 
 router = APIRouter(prefix="/users")
 
 
-class CreateUserPayload(BaseModel):
-    user: UserDto
 
-
-@router.get("/register")
-async def create_user(payload: CreateUserPayload):
+@router.post("/auth/register")
+async def create_user(payload: UserRegister):
+    print("Received request to create user", payload)
     with database.get_db() as session:
-        user = user_service.create_user(session, payload.user)
+        print(f"Payload received: {payload}")
+        user = user_service.create_user(session, payload)
         return user
     
-  
-  

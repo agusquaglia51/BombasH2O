@@ -1,11 +1,11 @@
-from sqlalchemy import Column, DateTime, Integer, String
 from datetime import datetime
-
-from apps.backend.app.db.database import Base
-
+from sqlalchemy import Column, Integer, String, DateTime
+from .database import Base
 
 class User(Base):
-    _table_name_ = "users"
+    "attribute's of the user"
+    
+    __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String, index=True)
     last_name = Column(String, index=True)
@@ -14,10 +14,13 @@ class User(Base):
     cellphone = Column(String, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
 
 
 class Product(Base):
-    _table_name_ = "products"
+    "Attribute's of the product"
+    
+    __tablename__ = "products"
     id = Column(Integer, primary_key=True, index=True)
     product_name = Column(String, index=True)
     product_description = Column(String)
@@ -28,3 +31,4 @@ class Product(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     product_status = Column(String, default="active")
+    
