@@ -1,4 +1,5 @@
 "use client";
+import { AuthService } from "@/services/auth-service";
 import {
   Box,
   Button,
@@ -8,13 +9,14 @@ import {
   VStack,
   Text,
   FormErrorMessage,
-  FormHelperText,
   Tooltip,
+  useToast,
 } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 type Inputs = {
-  fistName: string;
+  firstName: string;
   lastName: string;
   email: string;
   cellphone: string;
@@ -24,6 +26,8 @@ type Inputs = {
 };
 
 const Register = () => {
+  const toast = useToast();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -31,7 +35,7 @@ const Register = () => {
     formState: { errors, isSubmitting, isValidating, isDirty, isValid },
   } = useForm<Inputs>({
     defaultValues: {
-      fistName: "",
+      firstName: "",
       lastName: "",
       email: "",
       cellphone: "",
@@ -42,23 +46,38 @@ const Register = () => {
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+    AuthService.register({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      cellphone: data.cellphone,
+      password: data.password,
     })
-      .then((data) => {
-        console.log("Registro exitoso:", data);
+      .then(() => {
+        toast({
+          title: "Account created.",
+          description: "We've created your account for you.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+        setTimeout(() => {
+          router.push("/auth/login");
+        }, 3000);
       })
       .catch((error) => {
-        console.error("Error al registrar:", error);
+        console.error("Registration failed:", error);
+        toast({
+          title: "Error.",
+          description: "There was an error creating your account.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "bottom-right",
+        });
       });
   };
-
-  console.log("isValidating", isValidating);
-  console.log(errors);
 
   return (
     <Box
@@ -87,11 +106,11 @@ const Register = () => {
               type="text"
               placeholder="nombre"
               focusBorderColor="cyan.400"
-              {...register("fistName", { required: true, maxLength: 20 })}
+              {...register("firstName", { required: true, maxLength: 20 })}
             />
           </FormControl>
-          {isDirty && errors.fistName && (
-            <FormErrorMessage>{errors.fistName.message}</FormErrorMessage>
+          {isDirty && errors.firstName && (
+            <FormErrorMessage>{errors.firstName.message}</FormErrorMessage>
           )}
 
           <FormControl id="lastName" isRequired>
@@ -113,7 +132,10 @@ const Register = () => {
               type="number"
               placeholder="+54 9 11 1234-5678"
               focusBorderColor="cyan.400"
-              {...register("cellphone", { required: true })}
+              {...register("cellphone", {
+                required: true,
+                pattern: /^\+?\d{1,3}?\s?\d{1,4}?\s?\d{4,}$/,
+              })}
             />
             {errors.cellphone && (
               <FormErrorMessage>{errors.cellphone.message}</FormErrorMessage>
@@ -123,10 +145,9 @@ const Register = () => {
           <FormControl id="email" isRequired>
             <FormLabel color="blue.600">Correo electrónico</FormLabel>
             <Input
-              type="email"
               placeholder="email@ejemplo.com"
               focusBorderColor="cyan.400"
-              {...register("email", { required: true })}
+              {...register("email", { required: true, pattern: /^\S+@\S+$/i })}
             />
             {errors.email && (
               <FormErrorMessage>{errors.email.message}</FormErrorMessage>
@@ -165,7 +186,7 @@ const Register = () => {
               type="confirmPassword"
               placeholder="••••••••"
               focusBorderColor="cyan.400"
-              {...register("password", {
+              {...register("confirmPassword", {
                 required: true,
                 validate: (value) => value === watch("password"),
               })}
@@ -175,7 +196,12 @@ const Register = () => {
             )}
           </FormControl>
 
-          <Button type="submit" colorScheme="teal" width="full">
+          <Button
+            type="submit"
+            colorScheme={isValid ? "teal" : "gray"}
+            width="full"
+            disabled={!isDirty || !isValid || isSubmitting}
+          >
             Sign Up
           </Button>
         </VStack>
