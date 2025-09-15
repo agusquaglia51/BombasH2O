@@ -80,7 +80,7 @@ const Login = () => {
             ¿No tenés una cuenta?{" "}
             <Text
               as="a"
-              href={"/auth/register"}
+              href={"/auth/signup"}
               color="teal.500"
               fontWeight="medium"
             >
