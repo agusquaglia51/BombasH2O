@@ -60,7 +60,10 @@ source .venv/Scripts/activate
 # 4. Instala las dependencias de Python
 pip install -r requirements.txt
 
-# 5. Regresa a la raíz del proyecto
+# 5. Desactivar entorno virtual
+deactivate
+
+# 6. Regresa a la raíz del proyecto
 cd ../..
 ```
 

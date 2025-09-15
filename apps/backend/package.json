@@ -2,7 +2,8 @@
   "name": "backend",
   "version": "1.0.0",
   "scripts": {
-    "dev": "fastapi dev app/main.py",
+    "dev": "./rundev.sh",
+    "postinstall": "chmod +x rundev.sh",
     "poststop": "deactivate"
   }
 }
