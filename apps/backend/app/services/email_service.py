@@ -32,7 +32,7 @@ class EmailService:
         if not self.sendgrid_api_key:
             return False
 
-        verification_url = f"{self.frontend_url}/auth/verifyEmail?token={verification_token}&email={email}"
+        verification_url = f"{self.frontend_url}/auth/verify-email?token={verification_token}&email={email}"
         
         html_content = self.render_template("verification_email.html", 
                                             first_name=first_name, verification_url=verification_url)
