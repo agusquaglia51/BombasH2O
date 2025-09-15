@@ -8,3 +8,4 @@ boto3
 python-jose
 passlib[bcrypt]
 sendgrid
+Jinja2

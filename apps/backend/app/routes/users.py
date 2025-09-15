@@ -1,4 +1,3 @@
-# app/routers/users.py
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session

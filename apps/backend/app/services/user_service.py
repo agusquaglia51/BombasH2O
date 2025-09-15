@@ -1,4 +1,3 @@
-# app/services/user_service.py
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
@@ -77,13 +76,13 @@ async def create_user(db: Session, user: UserRegister):
         "cellphone": new_user.cellphone,
         "is_email_verified": new_user.is_email_verified,
         "email_verification_sent": email_sent,
-        "created_at": new_user.created_at
+        "created_at": new_user.created_at.isoformat()
     }
 
 
 async def resend_verification_email(db: Session, user: models.User):
     """Resend verification email for unverified users"""
-    if user.verification_attempts >= 5:
+    if user.verification_attempts >= 10:
         last_attempt = user.last_verification_attempt
         if last_attempt and (datetime.utcnow() - last_attempt) < timedelta(days=1):
             raise HTTPException(
@@ -113,9 +112,14 @@ async def resend_verification_email(db: Session, user: models.User):
     )
 
     return {
-        "message": "Verification email sent",
+        "id": user.id,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+        "cellphone": user.cellphone,
+        "is_email_verified": user.is_email_verified,
         "email_verification_sent": email_sent,
-        "email": user.email
+        "created_at": user.created_at.isoformat()
     }
 
 
