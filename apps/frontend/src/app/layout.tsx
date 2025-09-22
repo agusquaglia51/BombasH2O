@@ -1,11 +1,7 @@
 import Provider from "./providers/provider";
 import Header from "../../../../packages/ui/src/components/Header";
 
-export default function LoginLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="es">
       <body>
@@ -16,4 +12,6 @@ export default function LoginLayout({
       </body>
     </html>
   );
-}
+};
+
+export default Layout;
