@@ -1,4 +1,5 @@
 "use client";
+import { AuthService } from "@/app/services/authService";
 import {
   Box,
   Button,
@@ -9,6 +10,7 @@ import {
   Text,
   FormErrorMessage,
 } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 type Inputs = {
@@ -22,8 +24,22 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
+  const router = useRouter();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data);
+    try {
+      // Llamada al servicio de login
+      const token = AuthService.login(data);
+      console.log(token);
+      console.log("Login successful");
+      setTimeout(() => {
+        router.push("/");
+      }, 5000);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
 
   return (
     <Box

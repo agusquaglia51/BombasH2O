@@ -5,17 +5,14 @@ from fastapi import HTTPException
 from typing import Optional
 
 from app.db import models
+from ..services.auth_service import hash_password
 from ..schemas.user import UserRegister
 from ..services.email_service import email_service
 
 # Password hashing configuration
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
 
 async def create_user(db: Session, user: UserRegister):
     """

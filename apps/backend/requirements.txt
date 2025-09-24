@@ -1,11 +1,26 @@
-fastapi[standard]
-uvicorn[standard]
-python-dotenv
-requests
-sqlalchemy
-psycopg2-binary
-boto3
-python-jose
-passlib[bcrypt]
-sendgrid
-Jinja2
+# Core
+fastapi[standard]        # FastAPI con dependencias comunes
+uvicorn[standard]       # Servidor ASGI para desarrollo
+python-dotenv           # Manejo de variables de entorno
+
+# Database
+sqlalchemy              # ORM
+psycopg2-binary         # PostgreSQL driver
+
+# Security
+passlib[bcrypt]         # Hash de contraseñas
+python-jose             # JWT
+
+# Email
+sendgrid                # Envío de emails
+Jinja2                  # Templates para emails
+
+# Utilities
+requests                # Llamadas HTTP externas
+email-validator         # Validación de emails (Pydantic EmailStr)
+
+# Optional for testing
+pytest                  # Testing framework
+pytest-asyncio          # Testing para funciones async
+
+

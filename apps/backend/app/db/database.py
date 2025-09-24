@@ -50,7 +50,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Base para modelos ORM
 Base = declarative_base()
 
-@contextmanager
+
 def get_db():
     db = SessionLocal()
     try:
