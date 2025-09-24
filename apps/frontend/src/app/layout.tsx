@@ -1,5 +1,5 @@
 import Provider from "./providers/provider";
-import Header from "../../../../packages/ui/src/components/Header";
+import { Header } from "@ui/components/Header";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
