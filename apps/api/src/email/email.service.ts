@@ -5,10 +5,11 @@ import { Resend } from 'resend';
 export class EmailService {
   private readonly resend = new Resend(process.env.RESEND_API_KEY);
   private readonly logger = new Logger(EmailService.name);
-  private readonly fromAddress = 'onboarding@resend.dev';
+  private readonly fromAddress =
+    process.env.EMAIL_FROM || 'onboarding@resend.dev';
 
   async sendPasswordResetEmail(to: string, token: string): Promise<void> {
-    const resetUrl = `http://localhost:3000/reset-password?token=${token}`;
+    const resetUrl = `${process.env.APP_URL}/reset-password?token=${token}`;
 
     const { error } = await this.resend.emails.send({
       from: this.fromAddress,
@@ -38,7 +39,7 @@ export class EmailService {
   }
 
   async sendVerificationEmail(to: string, token: string): Promise<void> {
-    const verifyUrl = `http://localhost:3000/auth/verify-email?token=${token}`;
+    const verifyUrl = `${process.env.APP_URL}/auth/verify-email?token=${token}`;
 
     const { error } = await this.resend.emails.send({
       from: this.fromAddress,
