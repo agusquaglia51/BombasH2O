@@ -50,31 +50,70 @@ model User {
   @@map("users")
 }
 
+model Brand {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  logoUrl   String?   @map("logo_url")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  products Product[]
+
+  @@map("brands")
+}
+
 model Product {
   id          String   @id @default(cuid())
+  sku         String?  @unique
   name        String
   description String?
-  price       Float
+  listPrice   Decimal  @map("list_price") @db.Decimal(10, 2)
   stock       Int      @default(0)
-  imageUrl    String?
-  categoryId  String
-  category    Category @relation(fields: [categoryId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isActive    Boolean  @default(true) @map("is_active")
+  imageUrls   String[] @map("image_urls")
+  specs       Json?
+  brandId     String?  @map("brand_id")
+  brand       Brand?   @relation(fields: [brandId], references: [id])
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
+  categories ProductCategory[]
   orderItems OrderItem[]
 
   @@map("products")
 }
 
 model Category {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  createdAt DateTime @default(now())
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  parentId    String?   @map("parent_id")
+  parent      Category? @relation("CategoryTree", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryTree")
+  createdAt   DateTime  @default(now()) @map("created_at")
 
-  products Product[]
+  products ProductCategory[]
 
   @@map("categories")
+}
+
+model ProductCategory {
+  productId  String  @map("product_id")
+  categoryId String  @map("category_id")
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([productId, categoryId])
+  @@map("product_categories")
+}
+
+model PricingConfig {
+  id            String   @id @default(cuid())
+  surchargeRate Decimal  @map("surcharge_rate") @db.Decimal(5, 4)
+  effectiveFrom DateTime @map("effective_from")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("pricing_config")
 }
 
 model Order {
